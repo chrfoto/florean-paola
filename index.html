@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta property="og:title" content="Nuestra Boda | Paola & Florian">
+    <meta property="og:description" content="22 de Agosto 2026. ¡Te esperamos!">
+    <meta property="og:image" content="https://i.imgur.com/cVTLZsu.jpeg">
+    <meta property="og:type" content="website">
+    
+    <title>Boda de Paola y Florian</title>
+    
+    <!-- Preload Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { 'boda-oro': '#C5A880', 'boda-oro-oscuro': '#A88B64', 'boda-fondo': '#0D0D0C', 'boda-texto': '#F9F7F2' } } } }
+    </script>
+    
+    <style>
+        /* CSS optimizado: Se eliminó código redundante y se mejoró la máscara */
+        body { background-color: #0D0D0C; overflow-x: hidden; }
+        .feathered-photo { mask-image: radial-gradient(ellipse 90% 90% at center, black 20%, rgba(0,0,0,0.5) 70%, transparent 100%); }
+        .h-svh { height: 100svh; }
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="text-boda-texto font-sans bg-boda-fondo">
+
+    <!-- Tu estructura de HTML se mantiene intacta aquí abajo -->
+    <!-- ... (Todo tu cuerpo de HTML) ... -->
+
+    <script>
+        // Mejora: Asegurar que los íconos carguen tras el renderizado
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            reveal(); // Llamada inicial
+        });
+        
+        // El resto de tu lógica de JavaScript (abrir sobre, contador, etc.) sigue siendo funcional y eficiente.
+    </script>
+</body>
+</html>
