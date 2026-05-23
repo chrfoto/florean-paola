@@ -44,7 +44,7 @@
 
     <style>
         /* Optimización Safari Mobile y Github - LIGHT MODE */
-        html { background-color: #FDFBF7; }
+        html { background-color: #FDFBF7; scroll-behavior: smooth; }
         body { 
             overflow-x: hidden; 
             background-color: transparent; 
@@ -232,7 +232,7 @@
             opacity: 0;
         }
 
-        /* Desvanecido de bordes elíptico - Permite fundirse con el fondo claro */
+        /* Desvanecido de bordes elíptico (para las fotos separadoras) */
         .feathered-photo {
             -webkit-mask-image: radial-gradient(ellipse 90% 90% at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,0) 98%);
             mask-image: radial-gradient(ellipse 90% 90% at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,0) 98%);
@@ -248,7 +248,7 @@
         .hidden-scrollbar::-webkit-scrollbar { display: none; }
         .hidden-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Glass Panel CLARO */
+        /* Glass Panel CLARO (Fondo translúcido elegante) */
         .glass-panel {
             background-color: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(12px);
@@ -257,16 +257,28 @@
             box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
         }
 
+        /* Mosaico Masonry para Galería que respeta relaciones de aspecto */
+        .gallery-container {
+            column-count: 1;
+            column-gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .gallery-container { column-count: 2; }
+        }
+        @media (min-width: 1024px) {
+            .gallery-container { column-count: 3; }
+        }
+        .gallery-photo {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            break-inside: avoid;
+            transform: translateZ(0); /* Evita flickering de imágenes en Safari */
+        }
+        
         .spin-slow { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spinSlow 15s linear infinite;
-        }
         
         @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -329,24 +341,30 @@
 
     <main class="w-full min-h-screen relative overflow-hidden flex flex-col items-center">
         
-        <!-- HERO SECTION (PORTADA LIMPIA - CORTE RECTO) -->
-        <section id="inicio" class="relative min-h-[100svh] flex flex-col items-center justify-end text-center w-full pb-0">
+        <!-- HERO SECTION (PORTADA LIMPIA SIN DESVANECIDO INFERIOR) -->
+        <section id="inicio" class="relative min-h-[100svh] flex flex-col items-center justify-between text-center w-full pb-0">
             <div class="absolute inset-0 z-0 w-full h-full">
-                <!-- Foto centrada para mostrar rostros, sin desvanecido en la parte inferior -->
-                <img src="https://i.imgur.com/cVTLZsu.jpeg" alt="Paola y Florian" class="w-full h-full object-cover object-center">
-                <!-- Filtro oscuro general para legibilidad del texto blanco -->
-                <div class="absolute inset-0 bg-black/30"></div> 
+                <!-- Object-top mantiene las cabezas en la foto al recortar en móvil -->
+                <img src="https://i.imgur.com/cVTLZsu.jpeg" alt="Paola y Florian" class="w-full h-full object-cover object-top">
+                <div class="absolute inset-0 bg-black/20"></div> 
             </div>
             
-            <!-- Título desplazado al tercio inferior de la imagen -->
-            <div class="z-10 w-full px-6 flex flex-col items-center reveal pb-16 md:pb-24">
-                <h1 class="font-serif italic text-6xl md:text-8xl text-white drop-shadow-lg mb-4">Paola & Florian</h1>
-                <p class="font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-white drop-shadow-md border-t border-b border-white/40 py-3 px-8 mb-8">22 de Agosto 2026</p>
-                <h2 class="font-serif italic text-3xl md:text-4xl text-white drop-shadow-md">Save the date</h2>
+            <!-- Textos posicionados debajo de la barbilla -->
+            <div class="z-10 w-full px-6 flex flex-col items-center reveal pt-[50vh] md:pt-[55vh]">
+                <h1 class="font-serif italic text-6xl md:text-8xl text-white drop-shadow-lg mb-6">Paola & Florian</h1>
+                <p class="font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-white drop-shadow-md border-t border-b border-white/40 py-3 px-8">22 de Agosto 2026</p>
+            </div>
+            
+            <div class="flex-grow"></div>
+            
+            <!-- Puente de color sólido para conectar suavemente con el menú -->
+            <div class="z-10 w-full pt-48 pb-8 md:pb-12 px-12 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/95 to-transparent flex flex-col items-center justify-end relative">
+                <h2 class="font-serif italic text-4xl md:text-5xl text-gray-900 mb-2">Save the date</h2>
+                <p class="font-sans text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600">22 Ago 2026</p>
             </div>
         </section>
 
-        <!-- MENÚ DE NAVEGACIÓN SUPERIOR (STICKY BAR INMEDIATAMENTE DESPUÉS DE LA FOTO) -->
+        <!-- MENÚ DE NAVEGACIÓN SUPERIOR (STICKY BAR) -->
         <nav class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
             <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
                 <div class="text-gray-900 font-serif italic text-2xl tracking-widest hidden md:block">P&F</div>
@@ -376,28 +394,30 @@
             </div>
         </nav>
 
-        <!-- INTRODUCCIÓN MINIMALISTA -->
-        <section class="py-24 px-6 w-full max-w-3xl text-center">
-            <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-10 reveal">Con la bendición de nuestros padres</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-serif text-xl text-gray-800 font-light">
-                <div class="flex flex-col items-center reveal delay-100">
-                    <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padres de la Novia</p>
-                    <p>Maria Bertha Oliva Guerrero</p>
-                    <p>Luis Raya Olivo</p>
+        <!-- INTRODUCCIÓN MINIMALISTA PROTEGIDA POR GLASS-PANEL -->
+        <section class="py-24 px-6 w-full max-w-4xl text-center reveal">
+            <div class="glass-panel p-10 md:p-16 rounded-sm w-full">
+                <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-10">Con la bendición de nuestros padres</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-serif text-xl text-gray-800 font-light">
+                    <div class="flex flex-col items-center reveal delay-100">
+                        <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padres de la Novia</p>
+                        <p>Maria Bertha Oliva Guerrero</p>
+                        <p>Luis Raya Olivo</p>
+                    </div>
+                    <div class="flex flex-col items-center reveal delay-200">
+                        <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padres del Novio</p>
+                        <p>Annemarie Schachinger</p>
+                        <p>Reinhard Schachinger</p>
+                    </div>
                 </div>
-                <div class="flex flex-col items-center reveal delay-200">
-                    <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padres del Novio</p>
-                    <p>Annemarie Schachinger</p>
-                    <p>Reinhard Schachinger</p>
+                
+                <div class="w-16 h-[1px] bg-boda-oro/30 mx-auto my-12 reveal delay-300"></div>
+                
+                <div class="flex flex-col items-center font-serif text-xl text-gray-800 font-light reveal delay-400">
+                    <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padrinos de Velación</p>
+                    <p>María Silvia Guerrero González</p>
+                    <p>Victor Rogelio Murillo León</p>
                 </div>
-            </div>
-            
-            <div class="w-16 h-[1px] bg-boda-oro/30 mx-auto my-12 reveal delay-300"></div>
-            
-            <div class="flex flex-col items-center font-serif text-xl text-gray-800 font-light reveal delay-400">
-                <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padrinos de Velación</p>
-                <p>María Silvia Guerrero González</p>
-                <p>Victor Rogelio Murillo León</p>
             </div>
         </section>
 
@@ -439,8 +459,11 @@
         </section>
 
         <!-- SECCIÓN: UBICACIONES -->
-        <section id="ubicaciones" class="w-full max-w-5xl py-24 px-6 flex flex-col items-center">
-            <h2 class="font-serif italic text-5xl md:text-6xl text-center text-boda-oro mb-16 reveal">Dónde y Cuándo</h2>
+        <section id="ubicaciones" class="w-full max-w-5xl py-24 px-6 flex flex-col items-center reveal">
+            <!-- Título suelto protegido por panel translúcido -->
+            <div class="glass-panel px-10 py-4 mb-16 rounded-full inline-block">
+                <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro m-0">Dónde y Cuándo</h2>
+            </div>
             
             <div class="w-full flex flex-col md:flex-row gap-8 justify-center">
                 <!-- Ceremonia -->
@@ -481,63 +504,65 @@
             <img src="https://i.imgur.com/nNImgRZ.jpeg" class="w-full max-w-2xl h-auto max-h-[80vh] object-contain feathered-photo" alt="Paola & Florian">
         </div>
 
-        <!-- SECCIÓN: ITINERARIO -->
-        <section id="programa" class="w-full max-w-3xl py-24 px-6 flex flex-col items-center">
-            <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-16 reveal">Programa del Día</h2>
-            
-            <div class="relative timeline-container ml-6 space-y-12 pb-4 w-full max-w-sm">
+        <!-- SECCIÓN: ITINERARIO PROTEGIDA POR GLASS-PANEL -->
+        <section id="programa" class="w-full max-w-4xl py-24 px-6 reveal flex flex-col items-center">
+            <div class="glass-panel w-full p-10 md:p-16 flex flex-col items-center rounded-sm">
+                <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-16">Programa del Día</h2>
                 
-                <div class="relative pl-10 text-left reveal delay-100">
-                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
-                        <i data-lucide="church" class="w-3.5 h-3.5"></i>
+                <div class="relative timeline-container ml-6 space-y-12 pb-4 w-full max-w-sm">
+                    
+                    <div class="relative pl-10 text-left reveal delay-100">
+                        <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                            <i data-lucide="church" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">18:00 hrs</p>
+                        <h4 class="font-serif text-2xl text-gray-900 font-light">Ceremonia Religiosa</h4>
                     </div>
-                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">18:00 hrs</p>
-                    <h4 class="font-serif text-2xl text-gray-900 font-light">Ceremonia Religiosa</h4>
-                </div>
 
-                <div class="relative pl-10 text-left reveal delay-200">
-                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
-                        <i data-lucide="glass-water" class="w-3.5 h-3.5"></i>
+                    <div class="relative pl-10 text-left reveal delay-200">
+                        <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                            <i data-lucide="glass-water" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">20:00 hrs</p>
+                        <h4 class="font-serif text-2xl text-gray-900 font-light">Recepción</h4>
                     </div>
-                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">20:00 hrs</p>
-                    <h4 class="font-serif text-2xl text-gray-900 font-light">Recepción</h4>
-                </div>
 
-                <div class="relative pl-10 text-left reveal delay-300">
-                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
-                        <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
+                    <div class="relative pl-10 text-left reveal delay-300">
+                        <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                            <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">20:30 hrs</p>
+                        <h4 class="font-serif text-2xl text-gray-900 font-light">Banquete</h4>
                     </div>
-                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">20:30 hrs</p>
-                    <h4 class="font-serif text-2xl text-gray-900 font-light">Banquete</h4>
-                </div>
 
-                <div class="relative pl-10 text-left reveal delay-400">
-                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
-                        <i data-lucide="heart" class="w-3.5 h-3.5"></i>
+                    <div class="relative pl-10 text-left reveal delay-400">
+                        <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                            <i data-lucide="heart" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">21:40 hrs</p>
+                        <h4 class="font-serif text-2xl text-gray-900 font-light">Vals de Novios</h4>
                     </div>
-                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">21:40 hrs</p>
-                    <h4 class="font-serif text-2xl text-gray-900 font-light">Vals de Novios</h4>
-                </div>
-                
-                <div class="relative pl-10 text-left reveal delay-500">
-                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
-                        <i data-lucide="music" class="w-3.5 h-3.5"></i>
+                    
+                    <div class="relative pl-10 text-left reveal delay-500">
+                        <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                            <i data-lucide="music" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">21:50 hrs</p>
+                        <h4 class="font-serif text-2xl text-gray-900 font-light">¡A bailar!</h4>
                     </div>
-                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">21:50 hrs</p>
-                    <h4 class="font-serif text-2xl text-gray-900 font-light">¡A bailar!</h4>
-                </div>
 
-                <div class="relative pl-10 text-left reveal delay-600">
-                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
-                        <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+                    <div class="relative pl-10 text-left reveal delay-600">
+                        <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                            <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">03:00 hrs</p>
+                        <h4 class="font-serif text-2xl text-gray-900 font-light">Fin del Evento</h4>
                     </div>
-                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">03:00 hrs</p>
-                    <h4 class="font-serif text-2xl text-gray-900 font-light">Fin del Evento</h4>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN: DRESS CODE (CON ICONOS SVG INLINE) -->
+        <!-- SECCIÓN: DRESS CODE -->
         <section class="w-full max-w-4xl py-16 px-6 text-center reveal">
             <div class="glass-panel border border-white/10 p-12 rounded-sm relative w-full">
                 <div class="absolute top-4 right-4 text-boda-oro opacity-60"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
@@ -549,7 +574,7 @@
                 <div class="grid grid-cols-2 gap-8 font-serif text-gray-900">
                     <div class="flex flex-col items-center reveal delay-100">
                         <div class="mb-6 h-20 flex items-center justify-center">
-                            <!-- Icono SVG en código puro para Vestido de Mujer -->
+                            <!-- Icono SVG puro (Mujeres) -->
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-boda-oro">
                                 <path d="M9 4l-1 4"/>
                                 <path d="M15 4l1 4"/>
@@ -564,7 +589,7 @@
 
                     <div class="flex flex-col items-center reveal delay-200">
                         <div class="mb-6 h-20 flex items-center justify-center">
-                            <!-- Icono SVG en código puro para Traje de Hombre -->
+                            <!-- Icono SVG puro (Hombres) -->
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-boda-oro">
                                 <path d="M4 6c0 0 2-3 8-3s8 3 8 3v15H4V6z"/>
                                 <path d="M8 3l4 7 4-7"/>
@@ -581,8 +606,11 @@
 
         <!-- SECCIÓN: HOSPEDAJE -->
         <section id="hospedaje" class="w-full py-24 px-6 text-center overflow-hidden flex flex-col items-center">
-            <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-4 reveal">Hospedaje</h2>
-            <p class="font-sans text-xs font-light text-gray-600 mb-12 max-w-md mx-auto leading-relaxed reveal">Sugerencias de alojamiento para nuestros invitados.</p>
+            <!-- Títulos sueltos protegidos por panel translúcido -->
+            <div class="glass-panel px-10 py-6 mb-12 rounded-sm inline-block reveal">
+                <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-2 m-0">Hospedaje</h2>
+                <p class="font-sans text-xs font-light text-gray-600 m-0">Sugerencias de alojamiento para nuestros invitados.</p>
+            </div>
             
             <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 hidden-scrollbar w-full max-w-6xl justify-start md:justify-center px-4">
                 
@@ -619,42 +647,53 @@
             </div>
         </section>
 
-        <!-- SECCIÓN: GALERÍA (FLEX JUSTIFIED) -->
+        <!-- SECCIÓN: GALERÍA (MASONRY QUE RESPETA FOTOS ORIGINALES SIN RECORTES) -->
         <section id="galeria" class="w-full max-w-6xl py-24 px-6 mx-auto">
-            <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-16 reveal">Galería</h2>
+            <!-- Título suelto protegido por panel translúcido -->
+            <div class="text-center mb-16 reveal">
+                <div class="glass-panel px-10 py-4 rounded-full inline-block">
+                    <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro m-0">Galería</h2>
+                </div>
+            </div>
             
-            <div class="flex flex-wrap justify-center gap-4">
-                <img src="https://i.imgur.com/zCePeuD.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-100">
-                <img src="https://i.imgur.com/RL6wJwk.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-200">
-                <img src="https://i.imgur.com/uzK7xBS.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-300">
-                <img src="https://i.imgur.com/XANuqZg.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-100">
-                <img src="https://i.imgur.com/mFFjVTw.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-200">
-                <img src="https://i.imgur.com/WNuebc3.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-300">
-                <img src="https://i.imgur.com/4geGwsq.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-100">
+            <div class="gallery-container">
+                <img src="https://i.imgur.com/zCePeuD.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-100">
+                <img src="https://i.imgur.com/RL6wJwk.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-200">
+                <img src="https://i.imgur.com/uzK7xBS.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-300">
+                <img src="https://i.imgur.com/XANuqZg.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-100">
+                <img src="https://i.imgur.com/mFFjVTw.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-200">
+                <img src="https://i.imgur.com/WNuebc3.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-300">
+                <img src="https://i.imgur.com/4geGwsq.jpeg" class="gallery-photo rounded-sm shadow-sm border border-black/5 reveal delay-100">
             </div>
         </section>
 
-        <!-- SECCIÓN: REGALOS -->
-        <section id="regalos" class="w-full max-w-3xl py-24 px-6 text-center reveal">
-            <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-8">Mesa de Regalos</h2>
-            
-            <div class="w-full mx-auto glass-panel p-12 rounded-sm flex flex-col items-center justify-center">
+        <!-- SECCIÓN: REGALOS (NUEVO: LLUVIA DE SOBRES) -->
+        <section id="regalos" class="w-full max-w-4xl py-24 px-6 text-center reveal">
+            <div class="glass-panel p-10 md:p-14 rounded-sm w-full flex flex-col items-center">
+                <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-8">Mesa de Regalos</h2>
+                
                 <div class="w-16 h-16 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center mb-6">
-                    <i data-lucide="gift" class="w-8 h-8 text-boda-oro" stroke-width="1.5"></i>
+                    <i data-lucide="mail" class="w-8 h-8 text-boda-oro" stroke-width="1.5"></i>
                 </div>
-                <h4 class="font-sans uppercase tracking-[0.2em] text-xs text-gray-900 mb-6 font-semibold">Contribución en Efectivo</h4>
-                <p class="font-serif text-gray-700 text-center leading-relaxed text-lg max-w-xl italic">
-                    "Lo más importante para nosotros es celebrar juntos. Como vivimos en el extranjero, preferimos no recibir regalos físicos; si deseas hacernos un regalo, agradeceremos muchísimo una contribución en efectivo."
+                
+                <h4 class="font-sans uppercase tracking-[0.2em] text-xs text-gray-900 mb-6 font-semibold">Lluvia de Sobres</h4>
+                
+                <p class="font-serif text-gray-700 text-center leading-relaxed text-lg max-w-2xl italic">
+                    "El mejor regalo es su presencia. Si desean tener un detalle adicional con nosotros, el día del evento les entregaremos un sobre para que, quienes gusten, puedan darnos su regalo en efectivo. ¡Gracias por ayudarnos a construir nuestro futuro!"
                 </p>
             </div>
         </section>
 
-        <!-- SECCIÓN: RSVP OPTIMIZADA MOBILE -->
+        <!-- SECCIÓN: RSVP OPTIMIZADA MOBILE CON TÍTULOS PROTEGIDOS -->
         <section id="confirmacion" class="w-full max-w-2xl py-24 px-6 text-center reveal mb-12 flex flex-col items-center">
-            <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-4">Confirmación</h2>
-            <p class="font-sans font-light text-sm text-gray-700 mb-10 leading-relaxed">Agradecemos confirmar tu asistencia antes del<br><span class="font-medium text-gray-900 tracking-widest mt-2 block">9 DE AGOSTO DE 2026</span></p>
             
             <div class="w-full mx-auto glass-panel p-8 md:p-12 rounded-sm text-left relative overflow-hidden">
+                <!-- Títulos integrados dentro del panel de cristal para no perderse -->
+                <div class="text-center mb-12">
+                    <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-4">Confirmación</h2>
+                    <p class="font-sans font-light text-sm text-gray-700 leading-relaxed">Agradecemos confirmar tu asistencia antes del<br><span class="font-medium text-gray-900 tracking-widest mt-2 block">9 DE AGOSTO DE 2026</span></p>
+                </div>
+
                 <label class="block font-sans text-[10px] uppercase tracking-widest text-gray-500 mb-2">Nombre Completo</label>
                 <input type="text" id="guestName" class="w-full bg-transparent border-b border-gray-300 px-0 py-3 mb-8 focus:outline-none focus:border-boda-oro font-serif text-xl text-gray-900 transition-colors placeholder-gray-400" placeholder="Ej. Familia Pérez">
                 <span id="rsvp-error" class="hidden text-xs text-red-500 mt-[-1.5rem] mb-6 block font-medium">⚠️ Por favor, ingresa tu nombre.</span>
@@ -672,7 +711,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="w-full py-16 bg-white text-center border-t border-gray-200">
+        <footer class="w-full py-16 bg-white text-center border-t border-gray-200 relative z-20">
             <h1 class="font-serif italic text-4xl text-boda-oro mb-4">P&F</h1>
             <p class="font-sans text-[9px] uppercase tracking-[0.3em] text-gray-500 mb-8">22 de Agosto 2026</p>
         </footer>
@@ -760,7 +799,7 @@
         window.addEventListener("scroll", reveal, { passive: true });
         setTimeout(reveal, 500); 
 
-        // Configuración del Contador (Arreglado para Safari: ISO 8601 YYYY-MM-DDTHH:mm:ss)
+        // Configuración del Contador (Safari safe)
         const countDownDate = new Date("2026-08-22T18:00:00").getTime();
         const x = setInterval(function() {
             const now = new Date().getTime();
