@@ -3,46 +3,810 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
     <meta property="og:title" content="Nuestra Boda | Paola & Florian">
-    <meta property="og:description" content="22 de Agosto 2026. ¡Te esperamos!">
+    <meta property="og:description" content="¡Te invitamos a celebrar con nosotros este gran día! 22 de Agosto 2026.">
     <meta property="og:image" content="https://i.imgur.com/cVTLZsu.jpeg">
     <meta property="og:type" content="website">
     
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+
     <title>Boda de Paola y Florian</title>
     
-    <!-- Preload Fonts -->
+    <!-- Fuentes Minimalistas (Solo Serif y Sans-Serif) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <script>
-        tailwind.config = { theme: { extend: { colors: { 'boda-oro': '#C5A880', 'boda-oro-oscuro': '#A88B64', 'boda-fondo': '#0D0D0C', 'boda-texto': '#F9F7F2' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'boda-oro': '#C5A880',
+                        'boda-oro-oscuro': '#A88B64',
+                        'boda-fondo': '#FDFBF7', /* Fondo crema muy claro */
+                        'boda-texto': '#1A1A1A'  /* Texto oscuro intenso */
+                    },
+                    fontFamily: {
+                        'serif': ['"Cormorant Garamond"', 'serif'],
+                        'sans': ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
     </script>
-    
+
     <style>
-        /* CSS optimizado: Se eliminó código redundante y se mejoró la máscara */
-        body { background-color: #0D0D0C; overflow-x: hidden; }
-        .feathered-photo { mask-image: radial-gradient(ellipse 90% 90% at center, black 20%, rgba(0,0,0,0.5) 70%, transparent 100%); }
-        .h-svh { height: 100svh; }
-        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* Optimización Safari Mobile y Github - LIGHT MODE */
+        html { background-color: #FDFBF7; }
+        body { 
+            overflow-x: hidden; 
+            background-color: transparent; 
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            color: #1A1A1A;
+        }
+        
+        /* Uso de svh para Safari iOS - Evita cortes por la barra de navegación */
+        .h-svh { height: 100svh; min-height: -webkit-fill-available; }
+        .ios-safe-pb { padding-bottom: calc(env(safe-area-inset-bottom) + 5rem); }
+        
+        /* Contenedor de fondo con la textura floral invertida y aceleración de hardware */
+        #bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -10;
+            background-color: #FDFBF7; /* Base crema clara */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+
+        #bg-texture {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://i.imgur.com/viRuWGc.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Magia CSS: Invierte los colores oscuros a claros, quita la saturación y lo vuelve un papel tapiz sutil */
+            filter: invert(1) grayscale(100%) brightness(1.1) opacity(0.12);
+            pointer-events: none;
+        }
+        
+        /* Animaciones avanzadas en cascada (Stagger Reveal) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+        .delay-500 { transition-delay: 500ms; }
+        .delay-600 { transition-delay: 600ms; }
+        .delay-700 { transition-delay: 700ms; }
+
+        /* Sobre Digital en Light Mode */
+        #welcome-screen {
+            transition: opacity 1.2s ease-in-out, visibility 1.2s;
+            background-color: #FDFBF7; 
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); 
+            background-size: 300px; 
+            background-repeat: repeat;
+        }
+        #welcome-screen.hidden-screen {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 95%;
+            max-width: 420px;
+            height: 280px; 
+            perspective: 1000px;
+            transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
+        }
+
+        .envelope-body {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #E6E2D8;
+            border-radius: 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .envelope-card {
+            position: absolute;
+            top: 15px; left: 4%; width: 92%; height: 250px; 
+            background-color: #FFFFFF;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .envelope-card-content {
+            opacity: 0;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-delay: 0.6s; 
+        }
+        .envelope-container.open .envelope-card-content {
+            opacity: 1;
+        }
+
+        .envelope-front-flaps {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        
+        .flap-bottom {
+            position: absolute;
+            background-color: #EFECE5;
+            border: 1px solid rgba(197, 168, 128, 0.2);
+            bottom: 0; left: 0; width: 100%; height: 50%;
+            clip-path: polygon(0 100%, 50% 0, 100% 100%);
+            z-index: 3;
+        }
+
+        .envelope-top-flap {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 60%;
+            background-color: #F4F1EA;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 0.8s ease-in-out;
+            z-index: 4;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #C5A880, #9A7B54);
+            border-radius: 50%;
+            z-index: 5;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wax-seal::before {
+            content: '';
+            position: absolute;
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .envelope-container.open .envelope-top-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        
+        .envelope-container.open .wax-seal {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-container.open .envelope-card {
+            transform: translateY(-180px); 
+            z-index: 5;
+        }
+
+        .envelope-container.fade-out-down {
+            transform: translateY(100vh);
+            opacity: 0;
+        }
+
+        /* Desvanecido de bordes elíptico - Permite fundirse con el fondo claro */
+        .feathered-photo {
+            -webkit-mask-image: radial-gradient(ellipse 90% 90% at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,0) 98%);
+            mask-image: radial-gradient(ellipse 90% 90% at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0.8) 60%, rgba(0,0,0,0) 98%);
+        }
+
+        /* Línea de tiempo lateral minimalista */
+        .timeline-container {
+            position: relative;
+            border-left: 1px solid rgba(197, 168, 128, 0.4);
+        }
+
+        /* Ocultar barra de scroll horizontal */
+        .hidden-scrollbar::-webkit-scrollbar { display: none; }
+        .hidden-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Glass Panel CLARO */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        .spin-slow { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spinSlow 15s linear infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
     </style>
 </head>
-<body class="text-boda-texto font-sans bg-boda-fondo">
+<body class="text-gray-900 font-sans antialiased ios-safe-pb md:pb-0">
 
-    <!-- Tu estructura de HTML se mantiene intacta aquí abajo -->
-    <!-- ... (Todo tu cuerpo de HTML) ... -->
+    <!-- Fondo renderizado con la textura invertida -->
+    <div id="bg-container">
+        <div id="bg-texture"></div>
+    </div>
+
+    <!-- Barra Superior de Progreso -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-boda-oro to-boda-oro-oscuro z-[150] transition-all duration-100" style="width: 0%"></div>
+
+    <!-- Pantalla de Bienvenida: SOBRE DIGITAL -->
+    <div id="welcome-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center h-svh px-4">
+        <p class="font-sans tracking-[0.2em] text-[10px] uppercase text-gray-500 bg-white border border-gray-200 px-6 py-2.5 rounded-sm mb-8 text-center animate-pulse shadow-sm">
+            Toca el sello para abrir
+        </p>
+
+        <div class="envelope-container" id="envelope">
+            <div class="envelope-body"></div>
+            <div class="envelope-card flex flex-col justify-center">
+                <div class="envelope-card-content flex flex-col items-center justify-center w-full">
+                    <p class="font-sans tracking-[0.2em] text-[10px] uppercase text-gray-400 mb-2">Nos Casamos</p>
+                    <h1 class="font-serif italic text-3xl md:text-4xl text-gray-900 mb-1 text-center">
+                        Paola Raya<br>
+                        <span class="font-serif text-lg text-gray-400 my-1 block">&</span>
+                        Florian Schachinger
+                    </h1>
+                    <p class="font-sans tracking-widest text-xs text-gray-500 mt-2 uppercase">22 . 08 . 2026</p>
+                    <button onclick="cerrarSobreYEntrar()" class="mt-6 bg-gray-900 hover:bg-boda-oro text-white transition-all duration-300 text-[10px] font-sans uppercase tracking-[0.15em] px-8 py-3 rounded-sm shadow-md">
+                        Ver Invitación
+                    </button>
+                </div>
+            </div>
+            <div class="envelope-front-flaps">
+                <div class="flap-bottom"></div>
+            </div>
+            <div class="envelope-top-flap"></div>
+            <div class="wax-seal" onclick="abrirSobre()">
+                <span class="font-serif italic text-2xl text-[#FDFBF7]">P&F</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Flotante Música -->
+    <button id="music-toggle" aria-label="Música" class="fixed bottom-24 md:bottom-8 right-4 z-50 glass-panel rounded-full p-3 text-boda-oro transition-transform hover:scale-110 flex items-center justify-center">
+        <i data-lucide="music" id="music-icon" class="w-5 h-5"></i>
+    </button>
+    <audio id="bg-music" loop>
+        <source src="https://www.dropbox.com/scl/fi/rt30o9eeglddx3lrpb0r4/FINE-PLACE-TO-DIE.mp3?rlkey=mo9fqbglwbiihto5aik2bjwvz&st=o5ee576e&raw=1" type="audio/mpeg">
+    </audio>
+
+    <main class="w-full min-h-screen relative overflow-hidden flex flex-col items-center">
+        
+        <!-- HERO SECTION (PORTADA LIMPIA - CORTE RECTO) -->
+        <section id="inicio" class="relative min-h-[100svh] flex flex-col items-center justify-end text-center w-full pb-0">
+            <div class="absolute inset-0 z-0 w-full h-full">
+                <!-- Foto centrada para mostrar rostros, sin desvanecido en la parte inferior -->
+                <img src="https://i.imgur.com/cVTLZsu.jpeg" alt="Paola y Florian" class="w-full h-full object-cover object-center">
+                <!-- Filtro oscuro general para legibilidad del texto blanco -->
+                <div class="absolute inset-0 bg-black/30"></div> 
+            </div>
+            
+            <!-- Título desplazado al tercio inferior de la imagen -->
+            <div class="z-10 w-full px-6 flex flex-col items-center reveal pb-16 md:pb-24">
+                <h1 class="font-serif italic text-6xl md:text-8xl text-white drop-shadow-lg mb-4">Paola & Florian</h1>
+                <p class="font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-white drop-shadow-md border-t border-b border-white/40 py-3 px-8 mb-8">22 de Agosto 2026</p>
+                <h2 class="font-serif italic text-3xl md:text-4xl text-white drop-shadow-md">Save the date</h2>
+            </div>
+        </section>
+
+        <!-- MENÚ DE NAVEGACIÓN SUPERIOR (STICKY BAR INMEDIATAMENTE DESPUÉS DE LA FOTO) -->
+        <nav class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+            <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+                <div class="text-gray-900 font-serif italic text-2xl tracking-widest hidden md:block">P&F</div>
+                <div class="flex overflow-x-auto w-full md:w-auto gap-6 md:gap-8 text-[9px] md:text-[10px] uppercase tracking-[0.15em] text-gray-600 hidden-scrollbar items-center justify-start md:justify-end px-2">
+                    <a href="#programa" class="hover:text-boda-oro transition-colors whitespace-nowrap">Programa</a>
+                    <a href="#ubicaciones" class="hover:text-boda-oro transition-colors whitespace-nowrap">Cuándo y Dónde</a>
+                    <a href="#hospedaje" class="hover:text-boda-oro transition-colors whitespace-nowrap">Hospedaje</a>
+                    <a href="#galeria" class="hover:text-boda-oro transition-colors whitespace-nowrap">Galería</a>
+                    <a href="#confirmacion" class="hover:text-boda-oro transition-colors whitespace-nowrap">Confirmación</a>
+                    <a href="#regalos" class="hover:text-boda-oro transition-colors whitespace-nowrap">Mesa de Regalos</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MENÚ INFERIOR MÓVIL -->
+        <nav class="fixed bottom-0 left-0 w-full z-40 bg-white/95 backdrop-blur-lg shadow-[0_-5px_20px_rgba(0,0,0,0.05)] md:hidden border-t border-gray-200 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
+            <div class="flex justify-around px-2 py-3 text-[9px] uppercase font-serif text-gray-600 tracking-widest">
+                <a href="#ubicaciones" class="flex flex-col items-center gap-1 hover:text-boda-oro transition-colors">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-boda-oro"></i> Ubicación
+                </a>
+                <a href="#programa" class="flex flex-col items-center gap-1 hover:text-boda-oro transition-colors">
+                    <i data-lucide="clock" class="w-4 h-4 text-boda-oro"></i> Itinerario
+                </a>
+                <a href="#confirmacion" class="flex flex-col items-center gap-1 hover:text-boda-oro transition-colors">
+                    <i data-lucide="mail-check" class="w-4 h-4 text-boda-oro"></i> RSVP
+                </a>
+            </div>
+        </nav>
+
+        <!-- INTRODUCCIÓN MINIMALISTA -->
+        <section class="py-24 px-6 w-full max-w-3xl text-center">
+            <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-10 reveal">Con la bendición de nuestros padres</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-serif text-xl text-gray-800 font-light">
+                <div class="flex flex-col items-center reveal delay-100">
+                    <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padres de la Novia</p>
+                    <p>Maria Bertha Oliva Guerrero</p>
+                    <p>Luis Raya Olivo</p>
+                </div>
+                <div class="flex flex-col items-center reveal delay-200">
+                    <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padres del Novio</p>
+                    <p>Annemarie Schachinger</p>
+                    <p>Reinhard Schachinger</p>
+                </div>
+            </div>
+            
+            <div class="w-16 h-[1px] bg-boda-oro/30 mx-auto my-12 reveal delay-300"></div>
+            
+            <div class="flex flex-col items-center font-serif text-xl text-gray-800 font-light reveal delay-400">
+                <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-boda-oro mb-4 font-normal">Padrinos de Velación</p>
+                <p>María Silvia Guerrero González</p>
+                <p>Victor Rogelio Murillo León</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: CUENTA REGRESIVA CON FOTO DE FONDO -->
+        <section id="countdown" class="relative w-full py-32 flex flex-col items-center justify-center overflow-hidden reveal">
+            <img src="https://i.imgur.com/iU4faDW.jpeg" class="absolute inset-0 w-full h-full object-cover object-top" alt="Cuenta Regresiva">
+            <!-- Overlay claro para que las letras oscuras sean legibles -->
+            <div class="absolute inset-0 bg-white/70 backdrop-blur-[2px]"></div>
+            
+            <div class="relative z-10 text-center flex flex-col items-center w-full px-4">
+                <h2 class="font-serif text-5xl md:text-7xl text-gray-900 italic mb-4">Save the Date</h2>
+                <p class="font-sans text-lg md:text-xl tracking-[0.2em] text-gray-800 mb-16 uppercase">22 Agosto 2026</p>
+                
+                <!-- Reloj -->
+                <div class="flex gap-2 md:gap-4 font-serif mb-16 w-full justify-center px-2">
+                    <div class="flex flex-col items-center justify-center bg-white/60 backdrop-blur-md border border-gray-300 p-4 w-[4.5rem] md:w-24 aspect-square rounded-sm shadow-sm animate-float">
+                        <span id="days" class="text-2xl md:text-4xl text-gray-900 font-light">00</span>
+                        <span class="text-[7px] md:text-[8px] font-sans uppercase tracking-[0.2em] text-gray-500 mt-1 md:mt-2 font-medium">Días</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-white/60 backdrop-blur-md border border-gray-300 p-4 w-[4.5rem] md:w-24 aspect-square rounded-sm shadow-sm animate-float [animation-delay:0.3s]">
+                        <span id="hours" class="text-2xl md:text-4xl text-gray-900 font-light">00</span>
+                        <span class="text-[7px] md:text-[8px] font-sans uppercase tracking-[0.2em] text-gray-500 mt-1 md:mt-2 font-medium">Horas</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-white/60 backdrop-blur-md border border-gray-300 p-4 w-[4.5rem] md:w-24 aspect-square rounded-sm shadow-sm animate-float [animation-delay:0.6s]">
+                        <span id="minutes" class="text-2xl md:text-4xl text-gray-900 font-light">00</span>
+                        <span class="text-[7px] md:text-[8px] font-sans uppercase tracking-[0.2em] text-gray-500 mt-1 md:mt-2 font-medium">Mins</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-white/60 backdrop-blur-md border border-gray-300 p-4 w-[4.5rem] md:w-24 aspect-square rounded-sm shadow-sm animate-float [animation-delay:0.9s]">
+                        <span id="seconds" class="text-2xl md:text-4xl text-gray-900 font-light">00</span>
+                        <span class="text-[7px] md:text-[8px] font-sans uppercase tracking-[0.2em] text-gray-500 mt-1 md:mt-2 font-medium">Segs</span>
+                    </div>
+                </div>
+                
+                <p class="text-gray-600 text-[10px] font-sans tracking-[0.2em] uppercase mb-6 font-medium">Agrégalo a tu Calendario</p>
+                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto px-6">
+                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+de+Paola+y+Florian&dates=20260822T180000/20260823T030000&details=Celebra+con+nosotros+este+gran+d%C3%ADa.&location=Catedral+de+Morelia" target="_blank" class="w-full md:w-auto border border-gray-400 text-gray-800 px-8 py-4 md:py-3 rounded-full text-[10px] uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-colors">Google Calendar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: UBICACIONES -->
+        <section id="ubicaciones" class="w-full max-w-5xl py-24 px-6 flex flex-col items-center">
+            <h2 class="font-serif italic text-5xl md:text-6xl text-center text-boda-oro mb-16 reveal">Dónde y Cuándo</h2>
+            
+            <div class="w-full flex flex-col md:flex-row gap-8 justify-center">
+                <!-- Ceremonia -->
+                <div class="glass-panel w-full md:w-1/2 p-10 text-center relative flex flex-col items-center rounded-sm hover:-translate-y-1 transition-transform reveal delay-100">
+                    <div class="w-16 h-16 bg-white border border-gray-200 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                        <i data-lucide="church" class="w-7 h-7 text-boda-oro" stroke-width="1.5"></i>
+                    </div>
+                    <h3 class="font-serif italic text-3xl text-gray-900 mb-2">Ceremonia Religiosa</h3>
+                    <p class="font-sans text-[11px] uppercase tracking-widest text-boda-oro mb-6">Catedral de Morelia</p>
+                    <p class="font-sans font-light text-sm text-gray-600 mb-1">Sábado 22 de Agosto, 2026</p>
+                    <p class="font-sans font-light text-gray-900 text-lg mb-8">18:00 hrs</p>
+                    <a href="https://maps.app.goo.gl/AXNV1niUs5bNkePZ9" target="_blank" class="w-full md:w-auto inline-block border border-gray-400 text-gray-800 px-8 py-4 md:py-3 text-[10px] font-sans uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-colors rounded-sm">
+                        Ver Ubicación
+                    </a>
+                </div>
+
+                <!-- Recepción -->
+                <div class="glass-panel w-full md:w-1/2 p-10 text-center relative flex flex-col items-center rounded-sm hover:-translate-y-1 transition-transform reveal delay-200">
+                    <div class="w-16 h-16 bg-white border border-gray-200 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                        <div class="relative flex items-center justify-center select-none">
+                            <span class="font-serif italic text-xl text-boda-oro absolute -translate-x-1 -translate-y-1">Q</span>
+                            <span class="font-serif italic text-xl text-gray-800 absolute translate-x-1.5 translate-y-1">V</span>
+                        </div>
+                    </div>
+                    <h3 class="font-serif italic text-3xl text-gray-900 mb-2">Recepción</h3>
+                    <p class="font-sans text-[11px] uppercase tracking-widest text-boda-oro mb-6">Quinta Victoria</p>
+                    <p class="font-sans font-light text-sm text-gray-600 mb-1">Sábado 22 de Agosto, 2026</p>
+                    <p class="font-sans font-light text-gray-900 text-lg mb-8">20:00 hrs</p>
+                    <a href="https://maps.app.goo.gl/yDdtDgK2tVAEkgNZA" target="_blank" class="w-full md:w-auto inline-block border border-gray-400 text-gray-800 px-8 py-4 md:py-3 text-[10px] font-sans uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-colors rounded-sm">
+                        Ver Ubicación
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOTO SEPARADORA -->
+        <div class="w-full my-4 reveal flex justify-center px-4">
+            <img src="https://i.imgur.com/nNImgRZ.jpeg" class="w-full max-w-2xl h-auto max-h-[80vh] object-contain feathered-photo" alt="Paola & Florian">
+        </div>
+
+        <!-- SECCIÓN: ITINERARIO -->
+        <section id="programa" class="w-full max-w-3xl py-24 px-6 flex flex-col items-center">
+            <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-16 reveal">Programa del Día</h2>
+            
+            <div class="relative timeline-container ml-6 space-y-12 pb-4 w-full max-w-sm">
+                
+                <div class="relative pl-10 text-left reveal delay-100">
+                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                        <i data-lucide="church" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">18:00 hrs</p>
+                    <h4 class="font-serif text-2xl text-gray-900 font-light">Ceremonia Religiosa</h4>
+                </div>
+
+                <div class="relative pl-10 text-left reveal delay-200">
+                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                        <i data-lucide="glass-water" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">20:00 hrs</p>
+                    <h4 class="font-serif text-2xl text-gray-900 font-light">Recepción</h4>
+                </div>
+
+                <div class="relative pl-10 text-left reveal delay-300">
+                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                        <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">20:30 hrs</p>
+                    <h4 class="font-serif text-2xl text-gray-900 font-light">Banquete</h4>
+                </div>
+
+                <div class="relative pl-10 text-left reveal delay-400">
+                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                        <i data-lucide="heart" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">21:40 hrs</p>
+                    <h4 class="font-serif text-2xl text-gray-900 font-light">Vals de Novios</h4>
+                </div>
+                
+                <div class="relative pl-10 text-left reveal delay-500">
+                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                        <i data-lucide="music" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">21:50 hrs</p>
+                    <h4 class="font-serif text-2xl text-gray-900 font-light">¡A bailar!</h4>
+                </div>
+
+                <div class="relative pl-10 text-left reveal delay-600">
+                    <div class="absolute -left-[14px] top-1 w-7 h-7 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center text-boda-oro">
+                        <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <p class="font-sans text-[10px] text-boda-oro uppercase tracking-[0.2em] mb-1">03:00 hrs</p>
+                    <h4 class="font-serif text-2xl text-gray-900 font-light">Fin del Evento</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: DRESS CODE (CON ICONOS SVG INLINE) -->
+        <section class="w-full max-w-4xl py-16 px-6 text-center reveal">
+            <div class="glass-panel border border-white/10 p-12 rounded-sm relative w-full">
+                <div class="absolute top-4 right-4 text-boda-oro opacity-60"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+                <div class="absolute top-4 left-4 text-boda-oro opacity-60"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+                
+                <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-4">Dress Code</h2>
+                <p class="font-sans text-sm text-gray-600 mb-12 uppercase tracking-[0.3em] font-medium">Formal / Etiqueta</p>
+                
+                <div class="grid grid-cols-2 gap-8 font-serif text-gray-900">
+                    <div class="flex flex-col items-center reveal delay-100">
+                        <div class="mb-6 h-20 flex items-center justify-center">
+                            <!-- Icono SVG en código puro para Vestido de Mujer -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-boda-oro">
+                                <path d="M9 4l-1 4"/>
+                                <path d="M15 4l1 4"/>
+                                <path d="M8 8l-2 4c2.5 1 5.5 1 8 0l-2-4"/>
+                                <path d="M6 12l-3 10h18l-3-10"/>
+                                <path d="M8 8c0 0 2 1.5 4 1.5s4-1.5 4-1.5"/>
+                            </svg>
+                        </div>
+                        <p class="text-xl italic mb-1">Mujeres</p>
+                        <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-gray-500">Vestido Largo</p>
+                    </div>
+
+                    <div class="flex flex-col items-center reveal delay-200">
+                        <div class="mb-6 h-20 flex items-center justify-center">
+                            <!-- Icono SVG en código puro para Traje de Hombre -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-boda-oro">
+                                <path d="M4 6c0 0 2-3 8-3s8 3 8 3v15H4V6z"/>
+                                <path d="M8 3l4 7 4-7"/>
+                                <path d="M11 4h2l1 6-2 3-2-3 1-6z"/>
+                                <path d="M12 10v11"/>
+                            </svg>
+                        </div>
+                        <p class="text-xl italic mb-1">Hombres</p>
+                        <p class="text-[10px] font-sans uppercase tracking-[0.2em] text-gray-500">Traje Oscuro</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: HOSPEDAJE -->
+        <section id="hospedaje" class="w-full py-24 px-6 text-center overflow-hidden flex flex-col items-center">
+            <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-4 reveal">Hospedaje</h2>
+            <p class="font-sans text-xs font-light text-gray-600 mb-12 max-w-md mx-auto leading-relaxed reveal">Sugerencias de alojamiento para nuestros invitados.</p>
+            
+            <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 hidden-scrollbar w-full max-w-6xl justify-start md:justify-center px-4">
+                
+                <div class="min-w-[280px] snap-center glass-panel p-8 text-left rounded-sm reveal delay-100 flex-1">
+                    <h4 class="font-serif text-2xl text-gray-900 mb-4">Campiña Hotel</h4>
+                    <p class="font-sans text-xs text-gray-600 mb-8 flex items-center gap-2 font-light">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-boda-oro"></i> Morelia, Mich.
+                    </p>
+                    <a href="https://maps.app.goo.gl/FPP2tKmnHBnSRptX9" target="_blank" class="inline-block text-center border-b border-boda-oro text-boda-oro pb-1 text-[10px] uppercase tracking-widest hover:text-gray-900 hover:border-gray-900 transition-all">
+                        Ver Ubicación
+                    </a>
+                </div>
+                
+                <div class="min-w-[280px] snap-center glass-panel p-8 text-left rounded-sm reveal delay-200 flex-1">
+                    <h4 class="font-serif text-2xl text-gray-900 mb-4">Hotel Casa en el Campo</h4>
+                    <p class="font-sans text-xs text-gray-600 mb-8 flex items-center gap-2 font-light">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-boda-oro"></i> Morelia, Mich.
+                    </p>
+                    <a href="https://maps.app.goo.gl/C5U1eH6swUVQ5RCy6" target="_blank" class="inline-block text-center border-b border-boda-oro text-boda-oro pb-1 text-[10px] uppercase tracking-widest hover:text-gray-900 hover:border-gray-900 transition-all">
+                        Ver Ubicación
+                    </a>
+                </div>
+
+                <div class="min-w-[280px] snap-center glass-panel p-8 text-left rounded-sm reveal delay-300 flex-1">
+                    <h4 class="font-serif text-2xl text-gray-900 mb-4">Villa San Jose Hotel & Suites</h4>
+                    <p class="font-sans text-xs text-gray-600 mb-8 flex items-center gap-2 font-light">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-boda-oro"></i> Morelia, Mich.
+                    </p>
+                    <a href="https://maps.app.goo.gl/RzD7L2HGCBqNUDyx7" target="_blank" class="inline-block text-center border-b border-boda-oro text-boda-oro pb-1 text-[10px] uppercase tracking-widest hover:text-gray-900 hover:border-gray-900 transition-all">
+                        Ver Ubicación
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECCIÓN: GALERÍA (FLEX JUSTIFIED) -->
+        <section id="galeria" class="w-full max-w-6xl py-24 px-6 mx-auto">
+            <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-16 reveal">Galería</h2>
+            
+            <div class="flex flex-wrap justify-center gap-4">
+                <img src="https://i.imgur.com/zCePeuD.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-100">
+                <img src="https://i.imgur.com/RL6wJwk.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-200">
+                <img src="https://i.imgur.com/uzK7xBS.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-300">
+                <img src="https://i.imgur.com/XANuqZg.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-100">
+                <img src="https://i.imgur.com/mFFjVTw.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-200">
+                <img src="https://i.imgur.com/WNuebc3.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-300">
+                <img src="https://i.imgur.com/4geGwsq.jpeg" class="h-48 md:h-64 flex-grow object-cover rounded-sm shadow-sm border border-black/5 reveal delay-100">
+            </div>
+        </section>
+
+        <!-- SECCIÓN: REGALOS -->
+        <section id="regalos" class="w-full max-w-3xl py-24 px-6 text-center reveal">
+            <h2 class="font-serif italic text-4xl md:text-5xl text-boda-oro mb-8">Mesa de Regalos</h2>
+            
+            <div class="w-full mx-auto glass-panel p-12 rounded-sm flex flex-col items-center justify-center">
+                <div class="w-16 h-16 bg-white border border-gray-200 shadow-sm rounded-full flex items-center justify-center mb-6">
+                    <i data-lucide="gift" class="w-8 h-8 text-boda-oro" stroke-width="1.5"></i>
+                </div>
+                <h4 class="font-sans uppercase tracking-[0.2em] text-xs text-gray-900 mb-6 font-semibold">Contribución en Efectivo</h4>
+                <p class="font-serif text-gray-700 text-center leading-relaxed text-lg max-w-xl italic">
+                    "Lo más importante para nosotros es celebrar juntos. Como vivimos en el extranjero, preferimos no recibir regalos físicos; si deseas hacernos un regalo, agradeceremos muchísimo una contribución en efectivo."
+                </p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: RSVP OPTIMIZADA MOBILE -->
+        <section id="confirmacion" class="w-full max-w-2xl py-24 px-6 text-center reveal mb-12 flex flex-col items-center">
+            <h2 class="font-serif italic text-4xl md:text-5xl text-center text-boda-oro mb-4">Confirmación</h2>
+            <p class="font-sans font-light text-sm text-gray-700 mb-10 leading-relaxed">Agradecemos confirmar tu asistencia antes del<br><span class="font-medium text-gray-900 tracking-widest mt-2 block">9 DE AGOSTO DE 2026</span></p>
+            
+            <div class="w-full mx-auto glass-panel p-8 md:p-12 rounded-sm text-left relative overflow-hidden">
+                <label class="block font-sans text-[10px] uppercase tracking-widest text-gray-500 mb-2">Nombre Completo</label>
+                <input type="text" id="guestName" class="w-full bg-transparent border-b border-gray-300 px-0 py-3 mb-8 focus:outline-none focus:border-boda-oro font-serif text-xl text-gray-900 transition-colors placeholder-gray-400" placeholder="Ej. Familia Pérez">
+                <span id="rsvp-error" class="hidden text-xs text-red-500 mt-[-1.5rem] mb-6 block font-medium">⚠️ Por favor, ingresa tu nombre.</span>
+                
+                <label class="block font-sans text-[10px] uppercase tracking-widest text-gray-500 mb-2">Asistencia</label>
+                <select id="guestAttendance" class="w-full bg-transparent border-b border-gray-300 px-0 py-3 mb-12 focus:outline-none focus:border-boda-oro font-serif text-xl text-gray-900 transition-colors cursor-pointer appearance-none">
+                    <option value="Sí asistiré" class="bg-white text-gray-900">Sí, ¡ahí estaremos!</option>
+                    <option value="No podré asistir" class="bg-white text-gray-900">Lo siento, no podré asistir</option>
+                </select>
+                
+                <button onclick="confirmarWhatsApp()" class="w-full bg-gray-900 text-white px-6 py-4 rounded-sm hover:bg-boda-oro hover:text-white transition-all font-sans text-[10px] tracking-[0.2em] uppercase font-bold flex items-center justify-center gap-3">
+                    Confirmar Asistencia
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="w-full py-16 bg-white text-center border-t border-gray-200">
+            <h1 class="font-serif italic text-4xl text-boda-oro mb-4">P&F</h1>
+            <p class="font-sans text-[9px] uppercase tracking-[0.3em] text-gray-500 mb-8">22 de Agosto 2026</p>
+        </footer>
+
+    </main>
 
     <script>
-        // Mejora: Asegurar que los íconos carguen tras el renderizado
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            reveal(); // Llamada inicial
+        lucide.createIcons();
+
+        // Barra superior de progreso
+        window.addEventListener('scroll', () => {
+            const windScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (windScroll / height) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + '%';
+        }, { passive: true });
+
+        // Lógica del Sobre y Música con Fade-In
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const envelope = document.getElementById('envelope');
+        const bgMusic = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
+        let isPlaying = false;
+
+        function fadeInAudio(audio, targetVolume, duration) {
+            audio.volume = 0;
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    musicIcon.classList.add('spin-slow');
+                    
+                    let step = 0.05;
+                    let interval = duration / (targetVolume / step);
+                    let fade = setInterval(() => {
+                        if (audio.volume + step < targetVolume) {
+                            audio.volume += step;
+                        } else {
+                            audio.volume = targetVolume;
+                            clearInterval(fade);
+                        }
+                    }, interval);
+                }).catch(error => {
+                    console.log("Autoplay bloqueado.", error);
+                });
+            }
+        }
+
+        function abrirSobre() {
+            envelope.classList.add('open');
+            // Desvanecido de volumen: sube a 50% en 3.5 segundos
+            fadeInAudio(bgMusic, 0.5, 3500); 
+        }
+
+        function cerrarSobreYEntrar() {
+            envelope.classList.add('fade-out-down');
+            welcomeScreen.classList.add('hidden-screen');
+        }
+
+        document.getElementById('music-toggle').addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicIcon.classList.remove('spin-slow');
+            } else {
+                bgMusic.play();
+                musicIcon.classList.add('spin-slow');
+            }
+            isPlaying = !isPlaying;
         });
-        
-        // El resto de tu lógica de JavaScript (abrir sobre, contador, etc.) sigue siendo funcional y eficiente.
+
+        // Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal, { passive: true });
+        setTimeout(reveal, 500); 
+
+        // Configuración del Contador (Arreglado para Safari: ISO 8601 YYYY-MM-DDTHH:mm:ss)
+        const countDownDate = new Date("2026-08-22T18:00:00").getTime();
+        const x = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            if (isNaN(distance)) return;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("days").innerHTML = "00";
+                document.getElementById("hours").innerHTML = "00";
+                document.getElementById("minutes").innerHTML = "00";
+                document.getElementById("seconds").innerHTML = "00";
+            }
+        }, 1000);
+
+        // RSVP Interactivo a WhatsApp
+        function confirmarWhatsApp() {
+            const nameInput = document.getElementById('guestName').value.trim();
+            const attendance = document.getElementById('guestAttendance').value;
+            const errorLabel = document.getElementById('rsvp-error');
+            
+            if(nameInput === "") {
+                errorLabel.classList.remove('hidden');
+                document.getElementById('guestName').focus();
+                return;
+            } else {
+                errorLabel.classList.add('hidden');
+            }
+
+            const telefono = "524434866803"; 
+            const mensaje = `Hola, soy ${nameInput}. Quería confirmar que *${attendance}* a la boda de Paola y Florian.`;
+            
+            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
     </script>
 </body>
 </html>
